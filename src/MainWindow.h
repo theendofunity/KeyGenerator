@@ -8,6 +8,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    enum UserTypes
+    {
+        User = 0,
+        Admin,
+        God
+    };
+public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
