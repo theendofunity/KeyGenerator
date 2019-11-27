@@ -20,10 +20,12 @@ PROJECT_ROOT = $${_PRO_FILE_PWD_}
 INCLUDEPATH += $${PROJECT_ROOT}/src
 
 SOURCES += \
+    src/DataModel.cpp \
     src/main.cpp \
     src/MainWindow.cpp
 
 HEADERS += \
+    src/DataModel.h \
     src/MainWindow.h
 
 # Default rules for deployment.
