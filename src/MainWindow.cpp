@@ -10,10 +10,14 @@
 #include "QTextEdit"
 
 #include "DataModel.h"
+#include "EncryptKeyGenerator.h"
+
+#include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , model(new DataModel(this))
+    , coder(new EncryptKeyGenerator(this))
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -57,12 +61,21 @@ MainWindow::MainWindow(QWidget *parent)
     ttlDisable->setChecked(false);
     dataLayout->addWidget(ttlDisable, 2, 4);
 
+    //Ключ шифрования
+    dataLayout->addWidget(new QLabel(tr("Encrypt key")), 3, 0);
+    QLineEdit *encryptKey = new QLineEdit;
+    dataLayout->addWidget(encryptKey, 3, 1, 1, 2);
+    QPushButton *saveEncryptKeyBtn = new QPushButton(tr("Save"));
+    dataLayout->addWidget(saveEncryptKeyBtn, 3, 3);
+    QPushButton *generateEncryptKeyBtn = new QPushButton(tr("Generate"));
+    dataLayout->addWidget(generateEncryptKeyBtn, 3, 4);
+
     mainLayout->addStretch(1);
 
     //Генерация ключа
-    QPushButton *generateBtn = new QPushButton(tr("Generate Key"));
-    generateBtn->setDisabled(true);
-    mainLayout->addWidget(generateBtn);
+    QPushButton *generateAccessKeyBtn = new QPushButton(tr("Generate Access Key"));
+    mainLayout->addWidget(generateAccessKeyBtn);
+
 
     QHBoxLayout *keyLayout = new QHBoxLayout;
     mainLayout->addLayout(keyLayout);
@@ -75,10 +88,6 @@ MainWindow::MainWindow(QWidget *parent)
     keyLayout->addWidget(saveBtn);
     saveBtn->setDisabled(true);
 
-    connect(model, &DataModel::dataChanged, [generateBtn]()
-    {
-       generateBtn->setEnabled(true);
-    });
     connect(login, &QLineEdit::textChanged, model, &DataModel::setLogin);
     connect(password, &QLineEdit::textChanged, model, &DataModel::setPass);
     connect(userType, QOverload<int>::of(&QComboBox::activated), [=](int index)
@@ -97,6 +106,16 @@ MainWindow::MainWindow(QWidget *parent)
     {
         this->ttl->setDisabled(isChecked);
         this->model->setTtlState(isChecked);
+    });
+
+    connect(generateEncryptKeyBtn, &QPushButton::clicked, coder, &EncryptKeyGenerator::generateEncryptKey);
+    connect(coder, &EncryptKeyGenerator::keyGenerated, [encryptKey](std::string string)
+    {
+        encryptKey->setText(QString::fromStdString(string));
+    });
+    connect(saveEncryptKeyBtn, &QPushButton::clicked, [encryptKey, this]()
+    {
+        this->coder->saveEncryptKey(encryptKey->text());
     });
 
     initInterface();

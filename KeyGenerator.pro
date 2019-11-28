@@ -18,17 +18,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 PROJECT_ROOT = $${_PRO_FILE_PWD_}
 
 INCLUDEPATH += $${PROJECT_ROOT}/src
+INCLUDEPATH += $${PROJECT_ROOT}/libs
 
 SOURCES += \
     src/DataModel.cpp \
+    src/EncryptKeyGenerator.cpp \
     src/main.cpp \
     src/MainWindow.cpp
 
 HEADERS += \
     src/DataModel.h \
+    src/EncryptKeyGenerator.h \
     src/MainWindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+unix:!macx: LIBS += -L$$PWD/libs/ -lcryptopp
+
+INCLUDEPATH += $$PWD/libs
+DEPENDPATH += $$PWD/libs

@@ -2,7 +2,6 @@
 #define DATAMODEL_H
 
 #include "QObject"
-
 #include "stdint.h"
 #include "QDateTime"
 

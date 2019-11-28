@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 
+
 class DataModel;
+class EncryptKeyGenerator;
 
 class QLineEdit;
 class QCheckBox;
@@ -20,8 +22,10 @@ public:
 
 private:
     void initInterface();
+
 private:
     DataModel *model = nullptr;
+    EncryptKeyGenerator *coder = nullptr;
 
     QLineEdit* login = nullptr;
     QLineEdit* password = nullptr;
