@@ -2,9 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <memory>
 
 class DataModel;
+class AccessKeyGenerator;
 class EncryptKeyGenerator;
 
 class QLineEdit;
@@ -22,10 +23,12 @@ public:
 
 private:
     void initInterface();
+    void generateAccessCode();
 
 private:
-    DataModel *model = nullptr;
-    EncryptKeyGenerator *coder = nullptr;
+    std::shared_ptr<DataModel> model = nullptr;
+    EncryptKeyGenerator *encryptCoder = nullptr;
+    AccessKeyGenerator *accessCoder = nullptr;
 
     QLineEdit* login = nullptr;
     QLineEdit* password = nullptr;

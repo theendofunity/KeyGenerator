@@ -11,13 +11,15 @@
 
 #include "DataModel.h"
 #include "EncryptKeyGenerator.h"
+#include "AccessKeyGenerator.h"
 
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , model(new DataModel(this))
-    , coder(new EncryptKeyGenerator(this))
+    , model(std::make_shared<DataModel>(this))
+    , encryptCoder(new EncryptKeyGenerator(this))
+    , accessCoder(new AccessKeyGenerator(model, this))
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -88,13 +90,14 @@ MainWindow::MainWindow(QWidget *parent)
     keyLayout->addWidget(saveBtn);
     saveBtn->setDisabled(true);
 
-    connect(login, &QLineEdit::textChanged, model, &DataModel::setLogin);
-    connect(password, &QLineEdit::textChanged, model, &DataModel::setPass);
+    //Подключение к кодерам и модели данных
+    connect(login, &QLineEdit::textChanged, model.get(), &DataModel::setLogin);
+    connect(password, &QLineEdit::textChanged, model.get(), &DataModel::setPass);
     connect(userType, QOverload<int>::of(&QComboBox::activated), [=](int index)
     {
         model->setUserType(static_cast<uint8_t>(index));
     });
-    connect(ttl, &QDateTimeEdit::dateTimeChanged, model, &DataModel::setTtl);
+    connect(ttl, &QDateTimeEdit::dateTimeChanged, model.get(), &DataModel::setTtl);
     connect(authDisable, &QCheckBox::toggled, [this](const bool isChecked)
     {
         this->login->setDisabled(isChecked);
@@ -108,16 +111,21 @@ MainWindow::MainWindow(QWidget *parent)
         this->model->setTtlState(isChecked);
     });
 
-    connect(generateEncryptKeyBtn, &QPushButton::clicked, coder, &EncryptKeyGenerator::generateEncryptKey);
-    connect(coder, &EncryptKeyGenerator::keyGenerated, [encryptKey](std::string string)
+    connect(generateEncryptKeyBtn, &QPushButton::clicked, encryptCoder, &EncryptKeyGenerator::generateEncryptKey);
+    connect(encryptCoder, &EncryptKeyGenerator::keyGenerated, [encryptKey](std::string string)
     {
         encryptKey->setText(QString::fromStdString(string));
     });
     connect(saveEncryptKeyBtn, &QPushButton::clicked, [encryptKey, this]()
     {
-        this->coder->saveEncryptKey(encryptKey->text());
+        this->encryptCoder->saveEncryptKey(encryptKey->text());
     });
 
+    connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
+    connect(accessCoder, &AccessKeyGenerator::accessKeyGenerated, [keyField](std::string key)
+    {
+       keyField->setText(QString::fromStdString(key));
+    });
     initInterface();
 }
 
@@ -135,5 +143,10 @@ void MainWindow::initInterface()
     userType->setCurrentIndex(data.userType);
     ttl->setDateTime(data.ttl);
     ttlDisable->setChecked(data.noTtl);
+}
+
+void MainWindow::generateAccessCode()
+{
+    accessCoder->generateAccessKey(encryptCoder->getKey());
 }
 

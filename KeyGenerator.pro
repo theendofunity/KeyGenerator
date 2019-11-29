@@ -21,12 +21,16 @@ INCLUDEPATH += $${PROJECT_ROOT}/src
 INCLUDEPATH += $${PROJECT_ROOT}/libs
 
 SOURCES += \
+    src/AccessKeyGenerator.cpp \
+    src/ConvertTools.cpp \
     src/DataModel.cpp \
     src/EncryptKeyGenerator.cpp \
     src/main.cpp \
     src/MainWindow.cpp
 
 HEADERS += \
+    src/AccessKeyGenerator.h \
+    src/ConvertTools.h \
     src/DataModel.h \
     src/EncryptKeyGenerator.h \
     src/MainWindow.h

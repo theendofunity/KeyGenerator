@@ -13,8 +13,6 @@ public:
     EncryptKeyGenerator(QObject *parent = nullptr);
 
     void generateEncryptKey();
-    std::string encodeToHex(CryptoPP::SecByteBlock data);
-    void decodeFromHex(std::string encoded);
 
     void saveEncryptKey(QString newKey);
     CryptoPP::SecByteBlock getKey();
