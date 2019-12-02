@@ -13,6 +13,7 @@ class QLineEdit;
 class QCheckBox;
 class QComboBox;
 class QDateTimeEdit;
+class QTextEdit;
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +26,7 @@ public:
 private:
     void initInterface();
     void generateAccessCode();
+    void saveKeysToFile();
 
 private:
     std::shared_ptr<DataModel> model = nullptr;
@@ -38,5 +40,7 @@ private:
     QComboBox *userType = nullptr;
     QDateTimeEdit *ttl = nullptr;
     QCheckBox *ttlDisable = nullptr;
+    QLineEdit *encryptKey = nullptr;
+    QTextEdit *keyField = nullptr;
 };
 #endif // MAINWINDOW_H

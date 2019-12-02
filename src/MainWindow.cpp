@@ -15,6 +15,10 @@
 #include "Decoder.h"
 #include "ConvertTools.h"
 
+#include <QFile>
+#include <QFileDialog>
+#include <QMessageBox>
+
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -68,10 +72,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Ключ шифрования
     dataLayout->addWidget(new QLabel(tr("Encrypt key")), 3, 0);
-    QLineEdit *encryptKey = new QLineEdit;
+    encryptKey = new QLineEdit;
     dataLayout->addWidget(encryptKey, 3, 1, 1, 2);
-    QPushButton *saveEncryptKeyBtn = new QPushButton(tr("Save"));
-    dataLayout->addWidget(saveEncryptKeyBtn, 3, 3);
+    QPushButton *setEncryptKeyBtn = new QPushButton(tr("Set"));
+    dataLayout->addWidget(setEncryptKeyBtn, 3, 3);
     QPushButton *generateEncryptKeyBtn = new QPushButton(tr("Generate"));
     dataLayout->addWidget(generateEncryptKeyBtn, 3, 4);
 
@@ -85,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     QHBoxLayout *keyLayout = new QHBoxLayout;
     mainLayout->addLayout(keyLayout);
 
-    QTextEdit *keyField = new QTextEdit();
+    keyField = new QTextEdit();
     keyField->setReadOnly(true);
     keyLayout->addWidget(keyField);
 
@@ -115,24 +119,26 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(generateEncryptKeyBtn, &QPushButton::clicked, encryptCoder, &EncryptKeyGenerator::generateEncryptKey);
-    connect(encryptCoder, &EncryptKeyGenerator::keyGenerated, [encryptKey](std::string string)
+    connect(encryptCoder, &EncryptKeyGenerator::keyGenerated, [this](std::string string)
     {
-
         encryptKey->setText(QString::fromStdString(string));
     });
-    connect(saveEncryptKeyBtn, &QPushButton::clicked, [encryptKey, this]()
+    connect(setEncryptKeyBtn, &QPushButton::clicked, [this]()
     {
-        this->encryptCoder->saveEncryptKey(encryptKey->text());
-        this->decoder->setEncryptKey(encryptCoder->getKey());
+        encryptCoder->saveEncryptKey(encryptKey->text());
+        decoder->setEncryptKey(encryptCoder->getKey());
     });
 
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
-    connect(accessCoder, &AccessKeyGenerator::accessKeyGenerated, [keyField, this](std::string key)
+    connect(accessCoder, &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](std::string key)
     {
-       this->decoder->setAccessKey(convertTools::fromHex(key));
+       decoder->setAccessKey(convertTools::fromHex(key));
        keyField->setText(QString::fromStdString(key));
        decoder->decode();
+       saveBtn->setEnabled(true);
     });
+    connect(saveBtn, &QPushButton::clicked, this, &MainWindow::saveKeysToFile);
+
     initInterface();
 }
 
@@ -155,5 +161,30 @@ void MainWindow::initInterface()
 void MainWindow::generateAccessCode()
 {
     accessCoder->generateAccessKey(encryptCoder->getKey());
+}
+
+void MainWindow::saveKeysToFile()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save Keys"), QStringLiteral("keys.txt"),
+            tr("Text file (*.txt);;All Files (*)"));
+    if (fileName.isEmpty())
+        return;
+    else
+    {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly))
+        {
+            QMessageBox::information(this, tr("Unable to open file"),
+                file.errorString());
+            return;
+        }
+        QTextStream out(&file);
+
+        out << "Encrypt Key: " << encryptKey->text() << "\n";
+        out << "Access Key: " << keyField->toPlainText() << "\n";
+
+        file.close();
+    }
 }
 
