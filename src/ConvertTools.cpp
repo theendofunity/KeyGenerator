@@ -15,9 +15,7 @@ std::string convertTools::byteBlockToHexString(CryptoPP::SecByteBlock data)
     HexEncoder encoder;
     std::string encoded;
 
-    std::shared_ptr<StringSink> sink = std::make_shared<StringSink>(encoded);
-
-    encoder.Attach(sink.get());
+    encoder.Attach(new StringSink(encoded));
     encoder.Put(data.data(), data.size());
     encoder.MessageEnd();
     qDebug() << "EncodeTo"  << data.data() << QString::fromStdString(encoded);
@@ -51,9 +49,7 @@ std::string convertTools::toHex(std::string data)
     HexEncoder encoder;
     std::string encoded;
 
-    std::shared_ptr<StringSink> sink = std::make_shared<StringSink>(encoded);
-
-    encoder.Attach(sink.get());
+    encoder.Attach(new StringSink(encoded));
     encoder.Put(reinterpret_cast<const byte*>(data.data()), data.size());
     encoder.MessageEnd();
 
