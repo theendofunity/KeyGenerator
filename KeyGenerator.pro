@@ -20,6 +20,8 @@ PROJECT_ROOT = $${_PRO_FILE_PWD_}
 INCLUDEPATH += $${PROJECT_ROOT}/src
 INCLUDEPATH += $${PROJECT_ROOT}/libs
 
+include($${PROJECT_ROOT}/src/decoder/decoder.pri)
+
 SOURCES += \
     src/AccessKeyGenerator.cpp \
     src/ConvertTools.cpp \

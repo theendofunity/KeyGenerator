@@ -12,6 +12,8 @@
 #include "DataModel.h"
 #include "EncryptKeyGenerator.h"
 #include "AccessKeyGenerator.h"
+#include "Decoder.h"
+#include "ConvertTools.h"
 
 #include "QDebug"
 
@@ -20,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     , model(std::make_shared<DataModel>(this))
     , encryptCoder(new EncryptKeyGenerator(this))
     , accessCoder(new AccessKeyGenerator(model, this))
+    , decoder (new Decoder(this))
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -114,17 +117,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(generateEncryptKeyBtn, &QPushButton::clicked, encryptCoder, &EncryptKeyGenerator::generateEncryptKey);
     connect(encryptCoder, &EncryptKeyGenerator::keyGenerated, [encryptKey](std::string string)
     {
+
         encryptKey->setText(QString::fromStdString(string));
     });
     connect(saveEncryptKeyBtn, &QPushButton::clicked, [encryptKey, this]()
     {
         this->encryptCoder->saveEncryptKey(encryptKey->text());
+        this->decoder->setEncryptKey(encryptCoder->getKey());
     });
 
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
-    connect(accessCoder, &AccessKeyGenerator::accessKeyGenerated, [keyField](std::string key)
+    connect(accessCoder, &AccessKeyGenerator::accessKeyGenerated, [keyField, this](std::string key)
     {
+       this->decoder->setAccessKey(convertTools::fromHex(key));
        keyField->setText(QString::fromStdString(key));
+       decoder->decode();
     });
     initInterface();
 }

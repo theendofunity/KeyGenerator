@@ -7,6 +7,7 @@
 class DataModel;
 class AccessKeyGenerator;
 class EncryptKeyGenerator;
+class Decoder;
 
 class QLineEdit;
 class QCheckBox;
@@ -29,6 +30,7 @@ private:
     std::shared_ptr<DataModel> model = nullptr;
     EncryptKeyGenerator *encryptCoder = nullptr;
     AccessKeyGenerator *accessCoder = nullptr;
+    Decoder *decoder = nullptr;
 
     QLineEdit* login = nullptr;
     QLineEdit* password = nullptr;
