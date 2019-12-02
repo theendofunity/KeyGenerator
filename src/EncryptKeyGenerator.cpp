@@ -25,7 +25,7 @@ void EncryptKeyGenerator::generateEncryptKey()
 
     generator.GenerateBlock(newKey, newKey.size());
 
-    emit keyGenerated(convertTools::byteBlockToHex(newKey));
+    emit keyGenerated(convertTools::byteBlockToHexString(newKey));
 }
 
 
@@ -33,7 +33,8 @@ void EncryptKeyGenerator::saveEncryptKey(QString newKey)
 {
     auto decodedKey = convertTools::fromHex(newKey.toStdString());
 
-    key = SecByteBlock(reinterpret_cast<const byte*>(&decodedKey[0]), decodedKey.size());
+    auto data = static_cast<const byte*>(static_cast<void*>(&decodedKey[0]));
+    key = SecByteBlock(data, decodedKey.size());
 }
 
 SecByteBlock EncryptKeyGenerator::getKey()

@@ -132,8 +132,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
     connect(accessCoder, &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](std::string key)
     {
-       decoder->setAccessKey(convertTools::fromHex(key));
-       keyField->setText(QString::fromStdString(key));
+       decoder->setAccessKey(key);
+       keyField->setText(QString::fromStdString(convertTools::toHex(key)));
        decoder->decode();
        saveBtn->setEnabled(true);
     });

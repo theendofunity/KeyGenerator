@@ -32,11 +32,13 @@ void AccessKeyGenerator::generateAccessKey(SecByteBlock encryptKey)
     auto data = createDataString().toStdString();
     std::string cipher;
     cipher.resize(data.size());
-    encoder.ProcessData((byte*)&cipher[0], (const byte*)data.data(), data.size());
+
+    auto outStr = static_cast<byte*>(static_cast<void*>(&cipher[0]));
+    encoder.ProcessData(outStr, reinterpret_cast<const byte*>(data.data()), data.size());
 
     key = cipher;
 
-    emit accessKeyGenerated(convertTools::toHex(cipher));
+    emit accessKeyGenerated(cipher);
 }
 
 QString AccessKeyGenerator::createDataString()
@@ -52,5 +54,5 @@ QString AccessKeyGenerator::createDataString()
              << data.ttl.toString()
              << QString::number(data.noTtl);
 
-    return dataList.join(" ");
+    return dataList.join("|");
 }

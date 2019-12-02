@@ -8,7 +8,7 @@
 
 using namespace CryptoPP;
 
-std::string convertTools::byteBlockToHex(CryptoPP::SecByteBlock data)
+std::string convertTools::byteBlockToHexString(CryptoPP::SecByteBlock data)
 {
     HexEncoder encoder;
     std::string encoded;
@@ -33,7 +33,8 @@ std::string convertTools::fromHex(std::string encoded)
     if(size && size <= SIZE_MAX)
     {
         decoded.resize(size);
-        decoder.Get((byte*)&decoded[0], decoded.size());
+        auto data = static_cast<byte*>(static_cast<void*>(&decoded[0]));
+        decoder.Get(data, decoded.size());
     }
 
     qDebug() << "DecodeFrom" << QString::fromStdString(decoded) << QString::fromStdString(encoded);
@@ -47,7 +48,7 @@ std::string convertTools::toHex(std::string data)
     std::string encoded;
 
     encoder.Attach(new StringSink(encoded));
-    encoder.Put((const byte*)data.data(), data.size());
+    encoder.Put(reinterpret_cast<const byte*>(data.data()), data.size());
     encoder.MessageEnd();
 
     return encoded;

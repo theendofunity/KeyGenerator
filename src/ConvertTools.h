@@ -5,7 +5,7 @@
 
 namespace convertTools
 {
-    std::string byteBlockToHex(CryptoPP::SecByteBlock data);
+    std::string byteBlockToHexString(CryptoPP::SecByteBlock data);
     std::string fromHex(std::string encoded);
     std::string toHex(std::string data);
 }
