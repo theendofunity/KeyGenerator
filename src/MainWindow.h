@@ -6,7 +6,6 @@
 
 #include "EncryptKeyGenerator.h"
 #include "AccessKeyGenerator.h"
-#include "Decoder.h"
 
 class DataModel;
 
@@ -34,7 +33,6 @@ private:
     std::shared_ptr<DataModel> model = nullptr;
     std::unique_ptr<EncryptKeyGenerator> encryptCoder = nullptr;
     std::unique_ptr<AccessKeyGenerator> accessCoder = nullptr;
-    std::unique_ptr<Decoder> decoder = nullptr;
 
     QLineEdit* login = nullptr;
     QLineEdit* password = nullptr;

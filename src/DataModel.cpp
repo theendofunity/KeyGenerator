@@ -46,3 +46,37 @@ const DataModel::Data DataModel::getData() const
 {
     return data;
 }
+
+void DataModel::setData(DataModel::Data newData)
+{
+    this->data = newData;
+    emit dataChanged(data);
+}
+
+QStringList DataModel::dataToList()
+{
+    QStringList dataList;
+
+    dataList << data.login
+             << data.pass
+             << QString::number(data.noLogin)
+             << QString::number(data.userType)
+             << data.ttl.toString()
+             << QString::number(data.noTtl);
+
+    return  dataList;
+}
+
+DataModel::Data DataModel::listToData(QStringList list)
+{
+    Data newData;
+
+    data.login = list[0];
+    data.pass = list[1];
+    data.noLogin = list[2].toInt();
+    data.userType = static_cast<uint8_t>(list[3].toInt());
+    data.ttl = QDateTime::fromString(list[4]);
+    data.noTtl = list[5].toInt();
+
+    return newData;
+}

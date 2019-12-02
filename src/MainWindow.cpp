@@ -16,6 +16,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <Decoder.h>
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -23,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
     , model(std::make_shared<DataModel>(this))
     , encryptCoder(std::make_unique<EncryptKeyGenerator>(this))
     , accessCoder(std::make_unique<AccessKeyGenerator>(model, this))
-    , decoder (std::make_unique<Decoder>(this))
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -126,16 +126,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
     connect(accessCoder.get(), &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](std::string key)
     {
-       decoder->setAccessKey(key);
+//       decoder->setAccessKey(key);
        keyField->setText(QString::fromStdString(convertTools::toHex(key)));
-       decoder->decode();
+//       decoder->decode();
        saveBtn->setEnabled(true);
     });
     connect(saveBtn, &QPushButton::clicked, this, &MainWindow::saveKeysToFile);
 
     initInterface();
-}
 
+    Decoder dec(model);
+}
 MainWindow::~MainWindow()
 {
 }
@@ -172,7 +173,7 @@ void MainWindow::setEncryptKey()
     }
 
     encryptCoder->saveEncryptKey(encryptKey->text());
-    decoder->setEncryptKey(encryptCoder->getKey());
+//    decoder->setEncryptKey(encryptCoder->getKey());
 }
 
 void MainWindow::saveKeysToFile()

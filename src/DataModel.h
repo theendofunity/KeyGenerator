@@ -23,7 +23,7 @@ public:
         QString login = "Admin";
         QString pass = "Admin";
         bool noLogin = false;
-        uint8_t userType = UserTypes::Admin;
+        uint8_t userType = UserTypes::User;
         QDateTime ttl = QDateTime::currentDateTime().addDays(1);
         bool noTtl = false;
     };
@@ -38,6 +38,10 @@ public:
     void setTtlState(bool hasTtl);
 
     const Data getData() const;
+    void setData(Data newData);
+
+    QStringList dataToList();
+    Data listToData(QStringList list);
 
 signals:
     void dataChanged(Data data);

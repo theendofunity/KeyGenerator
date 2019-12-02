@@ -46,16 +46,7 @@ void AccessKeyGenerator::generateAccessKey(SecByteBlock encryptKey)
 
 QString AccessKeyGenerator::createDataString()
 {
-    auto data = model->getData();
-
-    QStringList dataList;
-
-    dataList << data.login
-             << data.pass
-             << QString::number(data.noLogin)
-             << QString::number(data.userType)
-             << data.ttl.toString()
-             << QString::number(data.noTtl);
+    auto dataList = model->dataToList();
 
     return dataList.join("|");
 }
