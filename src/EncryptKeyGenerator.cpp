@@ -7,6 +7,7 @@
 #include "cryptopp/hex.h"
 
 #include <ConvertTools.h>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -28,9 +29,11 @@ void EncryptKeyGenerator::generateEncryptKey()
     emit keyGenerated(convertTools::byteBlockToHexString(newKey));
 }
 
-
 void EncryptKeyGenerator::saveEncryptKey(QString newKey)
 {
+    if (newKey.isEmpty())
+        return;
+
     auto decodedKey = convertTools::fromHex(newKey.toStdString());
 
     auto data = static_cast<const byte*>(static_cast<void*>(&decodedKey[0]));

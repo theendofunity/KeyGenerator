@@ -4,10 +4,11 @@
 #include <QMainWindow>
 #include <memory>
 
+#include "EncryptKeyGenerator.h"
+#include "AccessKeyGenerator.h"
+#include "Decoder.h"
+
 class DataModel;
-class AccessKeyGenerator;
-class EncryptKeyGenerator;
-class Decoder;
 
 class QLineEdit;
 class QCheckBox;
@@ -26,13 +27,14 @@ public:
 private:
     void initInterface();
     void generateAccessCode();
+    void setEncryptKey();
     void saveKeysToFile();
 
 private:
     std::shared_ptr<DataModel> model = nullptr;
-    EncryptKeyGenerator *encryptCoder = nullptr;
-    AccessKeyGenerator *accessCoder = nullptr;
-    Decoder *decoder = nullptr;
+    std::unique_ptr<EncryptKeyGenerator> encryptCoder = nullptr;
+    std::unique_ptr<AccessKeyGenerator> accessCoder = nullptr;
+    std::unique_ptr<Decoder> decoder = nullptr;
 
     QLineEdit* login = nullptr;
     QLineEdit* password = nullptr;

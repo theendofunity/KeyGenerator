@@ -26,6 +26,9 @@ AccessKeyGenerator::AccessKeyGenerator(std::shared_ptr<DataModel> model, QObject
 
 void AccessKeyGenerator::generateAccessKey(SecByteBlock encryptKey)
 {
+    if (encryptKey.empty())
+        return;
+
     Rabbit::Encryption encoder;
     encoder.SetKey(encryptKey, encryptKey.size());
 
