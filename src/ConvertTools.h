@@ -1,7 +1,9 @@
 #ifndef CONVERTTOOLS_H
 #define CONVERTTOOLS_H
 
-#include "cryptopp/osrng.h"
+#include "libs/cryptopp/osrng.h"
+
+#include "crypt.h"
 
 namespace convertTools
 {

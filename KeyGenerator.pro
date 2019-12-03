@@ -37,12 +37,8 @@ HEADERS += \
     src/EncryptKeyGenerator.h \
     src/MainWindow.h
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 
-unix:!macx: LIBS += -L$$PWD/libs/ -lcryptopp
+unix:!macx: LIBS += -L$$PWD/libs/cryptopp -lcryptopp
 
-INCLUDEPATH += $$PWD/libs
-DEPENDPATH += $$PWD/libs
+INCLUDEPATH += $$PWD/libs/cryptopp
+DEPENDPATH += $$PWD/libs/cryptopp
