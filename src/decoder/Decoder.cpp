@@ -19,8 +19,7 @@ Decoder::Decoder(std::shared_ptr<DataModel> model, QObject *parent)
     : QObject(parent)
     , model(model)
 {
-    readKeys();
-//    decode();
+
 }
 
 void Decoder::setEncryptKey(std::string key)
@@ -39,7 +38,7 @@ void Decoder::setAccessKey(std::string key)
     if (key.empty())
         return;
 
-    accessKey = key;
+    accessKey = convertTools::fromHex(key);
 }
 
 void Decoder::setKeyPath(QString path)
@@ -73,7 +72,7 @@ void Decoder::decode()
 void Decoder::readKeys()
 {
     QFile file(keyPath + "/keys.txt");
-    qDebug() << keyPath;
+
     if (!file.open(QIODevice::ReadOnly))
     {
         qDebug() << "Error " << file.errorString();
@@ -99,5 +98,7 @@ void Decoder::parseKeys(std::string key)
 {
     QStringList data = QString::fromStdString(key).split("|");
 
-    model->setData(model->listToData(data));
+    auto newData = model->listToData(data);
+    qDebug() << "Parse" << newData.ttl;
+    model->setData(newData);
 }

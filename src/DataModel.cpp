@@ -1,5 +1,7 @@
 #include "DataModel.h"
 
+#include <QDebug>
+
 DataModel::DataModel(QObject *parent)
     : QObject(parent)
 {
@@ -71,12 +73,12 @@ DataModel::Data DataModel::listToData(QStringList list)
 {
     Data newData;
 
-    data.login = list[0];
-    data.pass = list[1];
-    data.noLogin = list[2].toInt();
-    data.userType = static_cast<uint8_t>(list[3].toInt());
-    data.ttl = QDateTime::fromString(list[4]);
-    data.noTtl = list[5].toInt();
+    newData.login = list[0];
+    newData.pass = list[1];
+    newData.noLogin = list[2].toInt();
+    newData.userType = static_cast<uint8_t>(list[3].toInt());
+    newData.ttl = QDateTime::fromString(list[4]);
+    newData.noTtl = list[5].toInt();
 
     return newData;
 }

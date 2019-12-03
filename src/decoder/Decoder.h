@@ -19,8 +19,9 @@ public:
     void setKeyPath(QString path);
 
     void decode();
-private:
     void readKeys();
+
+private:
     void parseKeys(std::string key);
 
 private:

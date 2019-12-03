@@ -16,7 +16,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include <Decoder.h>
+#include <AccessController.h>
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -126,16 +126,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
     connect(accessCoder.get(), &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](std::string key)
     {
-//       decoder->setAccessKey(key);
        keyField->setText(QString::fromStdString(convertTools::toHex(key)));
-//       decoder->decode();
        saveBtn->setEnabled(true);
     });
     connect(saveBtn, &QPushButton::clicked, this, &MainWindow::saveKeysToFile);
 
+
     initInterface();
 
-    Decoder dec(model);
+    AccessController* controller = new AccessController(this);
 }
 MainWindow::~MainWindow()
 {
