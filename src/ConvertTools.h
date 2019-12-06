@@ -1,7 +1,7 @@
 #ifndef CONVERTTOOLS_H
 #define CONVERTTOOLS_H
 
-#include "libs/cryptopp/osrng.h"
+#include "cryptopp/include/osrng.h"
 
 #include "crypt.h"
 

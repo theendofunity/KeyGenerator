@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "cryptopp/osrng.h"
+#include "cryptopp/include/osrng.h"
 #include "QString"
 
 class EncryptKeyGenerator : public QObject

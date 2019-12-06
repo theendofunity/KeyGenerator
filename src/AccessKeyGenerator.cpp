@@ -1,8 +1,8 @@
 #include "AccessKeyGenerator.h"
 
-#include "libs/cryptopp/rabbit.h"
-#include "libs/cryptopp/cryptlib.h"
-#include "libs/cryptopp/secblock.h"
+#include "cryptopp/include/rabbit.h"
+#include "cryptopp/include/cryptlib.h"
+#include "cryptopp/include/secblock.h"
 
 #include <QString>
 #include <QStringList>
@@ -10,8 +10,8 @@
 #include <DataModel.h>
 #include <ConvertTools.h>
 
-#include "libs/cryptopp/hex.h"
-#include "libs/cryptopp/files.h"
+#include "cryptopp/include/hex.h"
+#include "cryptopp/include/files.h"
 
 #include <QDebug>
 

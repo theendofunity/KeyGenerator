@@ -19,6 +19,7 @@ PROJECT_ROOT = $${_PRO_FILE_PWD_}
 
 INCLUDEPATH += $${PROJECT_ROOT}/src
 INCLUDEPATH += $${PROJECT_ROOT}/libs
+INCLUDEPATH += $${PROJECT_ROOT}/libs/cryptopp
 
 include($${PROJECT_ROOT}/src/decoder/decoder.pri)
 
@@ -38,7 +39,8 @@ HEADERS += \
     src/MainWindow.h
 
 
-unix:!macx: LIBS += -L$$PWD/libs/cryptopp -lcryptopp
+LIBS += -L$$PWD/libs/cryptopp -lcryptopp
 
-INCLUDEPATH += $$PWD/libs/cryptopp
-DEPENDPATH += $$PWD/libs/cryptopp
+INCLUDEPATH += $$PWD/libs/cryptopp/include
+DEPENDPATH += $$PWD/libs/cryptopp/include
+

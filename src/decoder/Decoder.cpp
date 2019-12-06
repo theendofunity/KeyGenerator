@@ -1,10 +1,10 @@
 #include "Decoder.h"
 
-#include "cryptopp/rabbit.h"
-#include "cryptopp/cryptlib.h"
-#include "cryptopp/files.h"
-#include "cryptopp/hex.h"
-#include "cryptopp/secblock.h"
+#include "cryptopp/include/rabbit.h"
+#include "cryptopp/include/cryptlib.h"
+#include "cryptopp/include/files.h"
+#include "cryptopp/include/hex.h"
+#include "cryptopp/include/secblock.h"
 
 #include "ConvertTools.h"
 

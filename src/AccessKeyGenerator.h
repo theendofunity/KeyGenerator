@@ -1,7 +1,7 @@
 #ifndef ACCESSKEYGENERATOR_H
 #define ACCESSKEYGENERATOR_H
 
-#include "cryptopp/osrng.h"
+#include "cryptopp/include/osrng.h"
 
 #include <QObject>
 #include <memory>

@@ -3,7 +3,7 @@
 
 #include "QObject"
 
-#include "cryptopp/osrng.h"
+#include "cryptopp/include/osrng.h"
 #include <QStandardPaths>
 
 class DataModel;

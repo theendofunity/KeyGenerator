@@ -16,7 +16,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include <AccessController.h>
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -134,7 +133,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     initInterface();
 
-    AccessController* controller = new AccessController(this);
 }
 MainWindow::~MainWindow()
 {

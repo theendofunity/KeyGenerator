@@ -1,6 +1,6 @@
 #include "ConvertTools.h"
 
-#include "cryptopp/hex.h"
+#include "cryptopp/include/hex.h"
 
 #include <QString>
 #include <memory>
