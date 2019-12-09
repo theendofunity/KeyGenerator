@@ -1,6 +1,6 @@
 #include "AccessController.h"
 
-#include <DataModel.h>
+#include "DataModel.h"
 #include <QTimer>
 
 #include <QMessageBox>
@@ -55,9 +55,9 @@ void AccessController::resetUserTypeToDefault()
 {
     QMessageBox::information(nullptr, tr("Timeout"), tr("Time to live for Key is ended. Running default mode"));
 
+    emit ttlEnded();
+
     model->setUserType(model->User);
     model->setTtlState(false);
     model->setLoginState(false);
-
-    emit ttlEnded();
 }

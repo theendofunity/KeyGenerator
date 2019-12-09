@@ -64,8 +64,6 @@ void Decoder::decode()
     auto outStr = static_cast<byte*>(static_cast<void*>(&recoverData[0]));
     decoder.ProcessData(outStr, reinterpret_cast<const byte*>(accessKey.data()), accessKey.size());
 
-    qDebug() << "Decoder" << QString::fromStdString(recoverData);
-
     parseKeys(recoverData);
 }
 
@@ -99,6 +97,5 @@ void Decoder::parseKeys(std::string key)
     QStringList data = QString::fromStdString(key).split("|");
 
     auto newData = model->listToData(data);
-    qDebug() << "Parse" << newData.ttl;
     model->setData(newData);
 }

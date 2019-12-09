@@ -1,6 +1,9 @@
-PRI_PATH = $${PROJECT_ROOT}/src/decoder
+message("decoder.pri")
 
-INCLUDEPATH += $${PRI_PATH}
+include($$PWD/../public/keyGenerator-public.pri)
+
+INCLUDEPATH += $$PWD
+INCLUDEPATH += $$PWD/../
 
 HEADERS += \
     $$PWD/AccessController.h \
@@ -9,3 +12,4 @@ HEADERS += \
 SOURCES += \
     $$PWD/AccessController.cpp \
     $$PWD/Decoder.cpp \
+
