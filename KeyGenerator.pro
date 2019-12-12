@@ -21,26 +21,15 @@ INCLUDEPATH += $${PROJECT_ROOT}/src
 INCLUDEPATH += $${PROJECT_ROOT}/libs
 INCLUDEPATH += $${PROJECT_ROOT}/libs/cryptopp
 
-include($${PROJECT_ROOT}/src/decoder/decoder.pri)
+include($${PROJECT_ROOT}/src/public/keyGenerator-public.pri)
 
 SOURCES += \
     src/AccessKeyGenerator.cpp \
-    src/ConvertTools.cpp \
-    src/DataModel.cpp \
     src/EncryptKeyGenerator.cpp \
     src/main.cpp \
     src/MainWindow.cpp
 
 HEADERS += \
     src/AccessKeyGenerator.h \
-    src/ConvertTools.h \
-    src/DataModel.h \
     src/EncryptKeyGenerator.h \
     src/MainWindow.h
-
-
-LIBS += -L$$PWD/libs/cryptopp -lcryptopp
-
-INCLUDEPATH += $$PWD/libs/cryptopp/include
-DEPENDPATH += $$PWD/libs/cryptopp/include
-
