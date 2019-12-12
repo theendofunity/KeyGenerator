@@ -28,6 +28,11 @@ QString AccessController::password()
     return model->getData().pass;
 }
 
+bool AccessController::noLogin()
+{
+    return model->getData().noLogin;
+}
+
 void AccessController::controlTtl()
 {
     auto data = model->getData();
