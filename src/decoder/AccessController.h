@@ -16,6 +16,7 @@ public:
     AccessController(QObject *parent = nullptr);
     int userType();
     QString password();
+    bool noLogin();
 
 private:
     void controlTtl();
