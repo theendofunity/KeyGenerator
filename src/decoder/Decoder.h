@@ -28,7 +28,7 @@ private:
     CryptoPP::SecByteBlock encryptKey;
     std::string accessKey;
 
-    QString keyPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    QString keyPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 
     std::shared_ptr<DataModel> model = nullptr;
 };

@@ -25,7 +25,7 @@ public:
         bool noLogin = false;
         uint8_t userType = UserTypes::User;
         QDateTime ttl = QDateTime::currentDateTime().addDays(1);
-        bool noTtl = false;
+        bool noTtl = true;
     };
 public:
     DataModel(QObject *parent = nullptr);

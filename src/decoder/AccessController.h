@@ -13,7 +13,7 @@ class AccessController : public QObject
 {
     Q_OBJECT
 public:
-    AccessController(QObject *parent = nullptr);
+    AccessController(QString pathToKeys = QString(), QObject *parent = nullptr);
     int userType();
     QString password();
     bool noLogin();

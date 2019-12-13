@@ -6,13 +6,13 @@
 #include <QMessageBox>
 #include <QDebug>
 
-AccessController::AccessController(QObject *parent)
+AccessController::AccessController(QString pathToKeys, QObject *parent)
     : QObject(parent)
 {
     model = std::make_shared<DataModel>();
     decoder = std::make_unique<Decoder>(model, this);
 
-//    decoder->setKeyPath()
+    decoder->setKeyPath(pathToKeys);
     decoder->readKeys();
     decoder->decode();
     controlTtl();

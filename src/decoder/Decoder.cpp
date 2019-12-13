@@ -43,7 +43,8 @@ void Decoder::setAccessKey(std::string key)
 
 void Decoder::setKeyPath(QString path)
 {
-    keyPath = path;
+    if (not path.isEmpty())
+        keyPath = path;
 }
 
 void Decoder::decode()
@@ -51,6 +52,7 @@ void Decoder::decode()
     if (accessKey.empty() || encryptKey.empty())
     {
         qDebug() << "Can't find keys, running in default mode";
+
         return;
     }
 
