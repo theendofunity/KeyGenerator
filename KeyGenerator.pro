@@ -19,7 +19,6 @@ PROJECT_ROOT = $${_PRO_FILE_PWD_}
 
 INCLUDEPATH += $${PROJECT_ROOT}/src
 INCLUDEPATH += $${PROJECT_ROOT}/libs
-INCLUDEPATH += $${PROJECT_ROOT}/libs/cryptopp
 
 include($${PROJECT_ROOT}/src/public/keyGenerator-public.pri)
 

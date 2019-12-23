@@ -10,7 +10,6 @@
 #include "QTextEdit"
 
 #include "DataModel.h"
-#include "ConvertTools.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -116,16 +115,16 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(generateEncryptKeyBtn, &QPushButton::clicked, encryptCoder.get(), &EncryptKeyGenerator::generateEncryptKey);
-    connect(encryptCoder.get(), &EncryptKeyGenerator::keyGenerated, [this](std::string string)
+    connect(encryptCoder.get(), &EncryptKeyGenerator::keyGenerated, [this](QString string)
     {
-        encryptKey->setText(QString::fromStdString(string));
+        encryptKey->setText(string);
     });
     connect(setEncryptKeyBtn, &QPushButton::clicked, this, &MainWindow::setEncryptKey);
 
-    connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessCode);
-    connect(accessCoder.get(), &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](std::string key)
+    connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessKey);
+    connect(accessCoder.get(), &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](QString key)
     {
-       keyField->setText(QString::fromStdString(convertTools::toHex(key)));
+       keyField->setText(key);
        saveBtn->setEnabled(true);
     });
     connect(saveBtn, &QPushButton::clicked, this, &MainWindow::saveKeysToFile);
@@ -150,7 +149,7 @@ void MainWindow::initInterface()
     ttlDisable->setChecked(data.noTtl);
 }
 
-void MainWindow::generateAccessCode()
+void MainWindow::generateAccessKey()
 {
     if (encryptKey->text().isEmpty())
     {
@@ -170,7 +169,6 @@ void MainWindow::setEncryptKey()
     }
 
     encryptCoder->saveEncryptKey(encryptKey->text());
-//    decoder->setEncryptKey(encryptCoder->getKey());
 }
 
 void MainWindow::saveKeysToFile()

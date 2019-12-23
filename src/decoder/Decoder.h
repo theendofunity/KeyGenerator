@@ -3,7 +3,7 @@
 
 #include "QObject"
 
-#include "cryptopp/include/osrng.h"
+#include <memory>
 #include <QStandardPaths>
 
 class DataModel;
@@ -14,19 +14,19 @@ class Decoder : public QObject
 public:
     Decoder(std::shared_ptr<DataModel> model, QObject *parent = nullptr);
 
-    void setEncryptKey(std::string key);
-    void setAccessKey(std::string key);
+    void setEncryptKey(QString key);
+    void setAccessKey(QString key);
     void setKeyPath(QString path);
 
     void decode();
     void readKeys();
 
 private:
-    void parseKeys(std::string key);
+    void parseKeys(QString key);
 
 private:
-    CryptoPP::SecByteBlock encryptKey;
-    std::string accessKey;
+    QByteArray encryptKey;
+    QByteArray accessKey;
 
     QString keyPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 

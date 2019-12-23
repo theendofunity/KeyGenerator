@@ -1,18 +1,13 @@
 #include "EncryptKeyGenerator.h"
 
-#include "cryptopp/include/cryptlib.h"
-#include "cryptopp/include/secblock.h"
-#include "cryptopp/include/rabbit.h"
-//#include "cryptopp/files.h"
-#include "cryptopp/include/hex.h"
-
-#include <ConvertTools.h>
 #include <QMessageBox>
+
+#include <QRandomGenerator>
+#include <QCryptographicHash>
+#include "AES/qaesencryption.h"
 
 #include <QDebug>
 
-
-using namespace CryptoPP;
 
 EncryptKeyGenerator::EncryptKeyGenerator(QObject *parent)
     :QObject(parent)
@@ -21,12 +16,13 @@ EncryptKeyGenerator::EncryptKeyGenerator(QObject *parent)
 
 void EncryptKeyGenerator::generateEncryptKey()
 {
-    AutoSeededRandomPool generator;
-    SecByteBlock newKey(16);
+    auto randomNumber = QRandomGenerator::global()->generate();
 
-    generator.GenerateBlock(newKey, newKey.size());
+    QString str = QString::number(randomNumber);
 
-    emit keyGenerated(convertTools::byteBlockToHexString(newKey));
+    QByteArray newKey = QCryptographicHash::hash(str.toLocal8Bit(), QCryptographicHash::Sha256);
+
+    emit keyGenerated(newKey.toHex());
 }
 
 void EncryptKeyGenerator::saveEncryptKey(QString newKey)
@@ -34,13 +30,12 @@ void EncryptKeyGenerator::saveEncryptKey(QString newKey)
     if (newKey.isEmpty())
         return;
 
-    auto decodedKey = convertTools::fromHex(newKey.toStdString());
+    auto decodedKey = QByteArray::fromHex(newKey.toLocal8Bit());
 
-    auto data = static_cast<const byte*>(static_cast<void*>(&decodedKey[0]));
-    key = SecByteBlock(data, decodedKey.size());
+    key = decodedKey;
 }
 
-SecByteBlock EncryptKeyGenerator::getKey()
+QByteArray EncryptKeyGenerator::getKey()
 {
     return key;
 }

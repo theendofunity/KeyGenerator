@@ -1,17 +1,17 @@
 message("keyGenerator-public.pri")
 
-LIBS_PATH = $$PWD/../../libs/
+LIBS_PATH = $$PWD/../../libs
 
 INCLUDEPATH += $$PWD
+INCLUDEPATH += $${LIBS_PATH}
+
 
 HEADERS += \
+    $${LIBS_PATH}/AES/qaesencryption.h \
     $$PWD/DataModel.h \
-    $$PWD/ConvertTools.h \
 
 SOURCES += \
+    $${LIBS_PATH}/AES/qaesencryption.cpp \
     $$PWD/DataModel.cpp \
-    $$PWD/ConvertTools.cpp \
 
-LIBS += -L$${LIBS_PATH}/cryptopp/ -lcryptopp
-INCLUDEPATH += $${LIBS_PATH}/cryptopp/include
-DEPENDPATH += $${LIBS_PATH}/cryptopp/include
+

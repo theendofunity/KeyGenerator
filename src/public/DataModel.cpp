@@ -63,7 +63,7 @@ QStringList DataModel::dataToList()
              << data.pass
              << QString::number(data.noLogin)
              << QString::number(data.userType)
-             << data.ttl.toString()
+             << QString::number(data.ttl.toSecsSinceEpoch())
              << QString::number(data.noTtl);
 
     return  dataList;
@@ -77,7 +77,7 @@ DataModel::Data DataModel::listToData(QStringList list)
     newData.pass = list[1];
     newData.noLogin = list[2].toInt();
     newData.userType = static_cast<uint8_t>(list[3].toInt());
-    newData.ttl = QDateTime::fromString(list[4]);
+    newData.ttl = QDateTime::fromSecsSinceEpoch(list[4].toLong());
     newData.noTtl = list[5].toInt();
 
     return newData;

@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-#include "cryptopp/include/osrng.h"
 #include "QString"
 
 class EncryptKeyGenerator : public QObject
@@ -15,13 +14,14 @@ public:
     void generateEncryptKey();
 
     void saveEncryptKey(QString newKey);
-    CryptoPP::SecByteBlock getKey();
+    QByteArray getKey();
 
 signals:
-    void keyGenerated(std::string newKey);
+    void keyGenerated(QString newKey);
 
 private:
-CryptoPP::SecByteBlock key;
+
+    QByteArray key;
 };
 
 #endif // CODER_H
