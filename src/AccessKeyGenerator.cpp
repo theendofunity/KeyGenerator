@@ -1,21 +1,12 @@
-#include "AccessKeyGenerator.h"
+﻿#include "AccessKeyGenerator.h"
 
-#include "cryptopp/include/rabbit.h"
-#include "cryptopp/include/cryptlib.h"
-#include "cryptopp/include/secblock.h"
-
+#include "AES/qaesencryption.h"
 #include <QString>
 #include <QStringList>
 
 #include <DataModel.h>
-#include <ConvertTools.h>
-
-#include "cryptopp/include/hex.h"
-#include "cryptopp/include/files.h"
 
 #include <QDebug>
-
-using namespace CryptoPP;
 
 AccessKeyGenerator::AccessKeyGenerator(std::shared_ptr<DataModel> model, QObject *parent)
         : QObject(parent)
@@ -24,29 +15,25 @@ AccessKeyGenerator::AccessKeyGenerator(std::shared_ptr<DataModel> model, QObject
 
 }
 
-void AccessKeyGenerator::generateAccessKey(SecByteBlock encryptKey)
+void AccessKeyGenerator::generateAccessKey(QByteArray encryptKey)
 {
-    if (encryptKey.empty())
+    if (encryptKey.isEmpty())
         return;
 
-    Rabbit::Encryption encoder;
-    encoder.SetKey(encryptKey, encryptKey.size());
+    QAESEncryption encoder (QAESEncryption::AES_256, QAESEncryption::ECB);
 
-    auto data = createDataString().toStdString();
-    std::string cipher;
-    cipher.resize(data.size());
+    auto data = createDataString();
 
-    auto outStr = static_cast<byte*>(static_cast<void*>(&cipher[0]));
-    encoder.ProcessData(outStr, reinterpret_cast<const byte*>(data.data()), data.size());
+    QByteArray accessKey = encoder.encode(data.toLocal8Bit(), encryptKey);
 
-    key = cipher;
-
-    emit accessKeyGenerated(cipher);
+    emit accessKeyGenerated(accessKey.toHex());
 }
 
 QString AccessKeyGenerator::createDataString()
 {
-    auto dataList = model->dataToList();
+    auto modelData = model->dataToList();
+    modelData.last() += "|";
+    auto dataString = modelData.join("|");
 
-    return dataList.join("|");
+    return dataString;
 }

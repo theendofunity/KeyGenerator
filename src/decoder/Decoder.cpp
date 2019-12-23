@@ -1,19 +1,13 @@
 #include "Decoder.h"
 
-#include "cryptopp/include/rabbit.h"
-#include "cryptopp/include/cryptlib.h"
-#include "cryptopp/include/files.h"
-#include "cryptopp/include/hex.h"
-#include "cryptopp/include/secblock.h"
 
-#include "ConvertTools.h"
+#include "AES/qaesencryption.h"
 
 #include <DataModel.h>
 
 #include <QFile>
 #include <QDebug>
 
-using namespace CryptoPP;
 
 Decoder::Decoder(std::shared_ptr<DataModel> model, QObject *parent)
     : QObject(parent)
@@ -22,23 +16,20 @@ Decoder::Decoder(std::shared_ptr<DataModel> model, QObject *parent)
 
 }
 
-void Decoder::setEncryptKey(std::string key)
+void Decoder::setEncryptKey(QString key)
 {
-    if (key.empty())
+    if (key.isEmpty())
         return;
 
-    auto decodedKey = convertTools::fromHex(key);
-
-    auto data = static_cast<const byte*>(static_cast<void*>(&decodedKey[0]));
-    encryptKey = SecByteBlock(data, decodedKey.size());
+   encryptKey = QByteArray::fromHex(key.toLocal8Bit());
 }
 
-void Decoder::setAccessKey(std::string key)
+void Decoder::setAccessKey(QString key)
 {
-    if (key.empty())
+    if (key.isEmpty())
         return;
 
-    accessKey = convertTools::fromHex(key);
+    accessKey = QByteArray::fromHex(key.toLocal8Bit());
 }
 
 void Decoder::setKeyPath(QString path)
@@ -49,24 +40,17 @@ void Decoder::setKeyPath(QString path)
 
 void Decoder::decode()
 {
-    if (accessKey.empty() || encryptKey.empty())
+    if (accessKey.isEmpty() || encryptKey.isEmpty())
     {
         qDebug() << "Can't find keys, running in default mode";
 
         return;
     }
 
-    std::string recoverData;
+    QAESEncryption decoder(QAESEncryption::AES_256, QAESEncryption::ECB);
+    auto recoverData = decoder.decode(accessKey, encryptKey);
 
-    Rabbit::Decryption decoder;
-    decoder.SetKey(encryptKey, encryptKey.size());
-
-    recoverData.resize(accessKey.size());
-
-    auto outStr = static_cast<byte*>(static_cast<void*>(&recoverData[0]));
-    decoder.ProcessData(outStr, reinterpret_cast<const byte*>(accessKey.data()), accessKey.size());
-
-    parseKeys(recoverData);
+    parseKeys(recoverData.data()); // метод data используется чтобы удалить лишние символы
 }
 
 void Decoder::readKeys()
@@ -88,16 +72,16 @@ void Decoder::readKeys()
     file.close();
 
     QString key1 = keys[0].split(": ")[1];
-    setEncryptKey(key1.toStdString());
+    setEncryptKey(key1);
 
     QString key2 = keys[1].split(": ")[1];
-    setAccessKey(key2.toStdString());
+    setAccessKey(key2);
 }
 
-void Decoder::parseKeys(std::string key)
+void Decoder::parseKeys(QString key)
 {
-    QStringList data = QString::fromStdString(key).split("|");
+    QStringList list = key.split("|");
+    auto newData = model->listToData(list);
 
-    auto newData = model->listToData(data);
     model->setData(newData);
 }

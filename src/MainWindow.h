@@ -25,7 +25,7 @@ public:
 
 private:
     void initInterface();
-    void generateAccessCode();
+    void generateAccessKey();
     void setEncryptKey();
     void saveKeysToFile();
 

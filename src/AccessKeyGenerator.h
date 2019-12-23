@@ -1,8 +1,6 @@
 #ifndef ACCESSKEYGENERATOR_H
 #define ACCESSKEYGENERATOR_H
 
-#include "cryptopp/include/osrng.h"
-
 #include <QObject>
 #include <memory>
 
@@ -15,17 +13,17 @@ class AccessKeyGenerator : public QObject
 
 public:
     AccessKeyGenerator(std::shared_ptr<DataModel> model, QObject *parent = nullptr);
-    void generateAccessKey(CryptoPP::SecByteBlock encryptKey);
+    void generateAccessKey(QByteArray encryptKey);
 
 private:
     QString createDataString();
 
 signals:
-    void accessKeyGenerated(std::string key);
+    void accessKeyGenerated(QString key);
 
 private:
     std::shared_ptr<DataModel> model;
-    std::string key;
+    QByteArray key;
 };
 
 #endif // ACCESSKEYGENERATOR_H
