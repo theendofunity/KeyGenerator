@@ -10,7 +10,7 @@ AccessController::AccessController(QString pathToKeys, QObject *parent)
     : QObject(parent)
 {
     model = std::make_shared<DataModel>();
-    decoder = std::make_unique<Decoder>(model, this);
+    decoder = new Decoder(model, this);
 
     decoder->setKeyPath(pathToKeys);
     decoder->readKeys();
@@ -62,7 +62,5 @@ void AccessController::resetUserTypeToDefault()
 
     emit ttlEnded();
 
-    model->setUserType(model->User);
-    model->setTtlState(false);
-    model->setLoginState(false);
+    model->dropToUserAccessMode();
 }

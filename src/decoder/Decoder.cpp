@@ -48,9 +48,11 @@ void Decoder::decode()
     }
 
     QAESEncryption decoder(QAESEncryption::AES_256, QAESEncryption::ECB);
-    auto recoverData = decoder.decode(accessKey, encryptKey);
 
-    parseKeys(recoverData.data()); // метод data используется чтобы удалить лишние символы
+    auto recoverData = decoder.decode(accessKey, encryptKey);
+    auto dataString = QString(recoverData.data()); // метод data используется чтобы удалить лишние символы
+
+    parseKeys(dataString);
 }
 
 void Decoder::readKeys()
@@ -66,21 +68,32 @@ void Decoder::readKeys()
     QTextStream in(&file);
 
     QStringList keys;
-    keys << in.readLine();
-    keys << in.readLine();
+    while (!in.atEnd())
+    {
+        keys << in.readLine();
+    }
 
     file.close();
 
-    QString key1 = keys[0].split(": ")[1];
-    setEncryptKey(key1);
+    if (keys.size() == 2) //2 ключа
+    {
+        QString key1 = keys[0].split(": ")[1];
+        setEncryptKey(key1);
 
-    QString key2 = keys[1].split(": ")[1];
-    setAccessKey(key2);
+        QString key2 = keys[1].split(": ")[1];
+        setAccessKey(key2);
+    }
 }
 
 void Decoder::parseKeys(QString key)
 {
     QStringList list = key.split("|");
+    if (list.size() != 5) //5 параметров в модели
+    {
+        qDebug() << "Error! Incorrect Key";
+        model->dropToUserAccessMode();
+        return;
+    }
     auto newData = model->listToData(list);
 
     model->setData(newData);

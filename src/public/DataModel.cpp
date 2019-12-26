@@ -44,6 +44,13 @@ void DataModel::setTtlState(bool hasTtl)
     emit dataChanged(data);
 }
 
+void DataModel::dropToUserAccessMode()
+{
+    setUserType(User);
+    setTtlState(false);
+    setLoginState(false);
+}
+
 const DataModel::Data DataModel::getData() const
 {
     return data;
@@ -73,12 +80,12 @@ DataModel::Data DataModel::listToData(QStringList list)
 {
     Data newData;
 
-    newData.login = list[0];
-    newData.pass = list[1];
-    newData.noLogin = list[2].toInt();
-    newData.userType = static_cast<uint8_t>(list[3].toInt());
-    newData.ttl = QDateTime::fromMSecsSinceEpoch(list[4].toLong());
-    newData.noTtl = list[5].toInt();
+    newData.login = list.at(0);
+    newData.pass = list.at(1);
+    newData.noLogin = list.at(2).toInt();
+    newData.userType = static_cast<uint8_t>(list.at(3).toInt());
+    newData.ttl = QDateTime::fromMSecsSinceEpoch(list.at(4).toLong());
+    newData.noTtl = list.at(5).toInt();
 
     return newData;
 }

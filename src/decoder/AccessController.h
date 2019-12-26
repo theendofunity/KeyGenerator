@@ -26,7 +26,7 @@ signals:
 
 private:
     std::shared_ptr<DataModel> model = nullptr;
-    std::unique_ptr<Decoder> decoder = nullptr;
+    Decoder* decoder = nullptr;
 
     QTimer *timer = nullptr;
 };

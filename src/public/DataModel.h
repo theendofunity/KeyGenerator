@@ -37,6 +37,8 @@ public:
     void setTtl(QDateTime ttl);
     void setTtlState(bool hasTtl);
 
+    void dropToUserAccessMode();
+
     const Data getData() const;
     void setData(Data newData);
 
