@@ -14,6 +14,8 @@ class QCheckBox;
 class QComboBox;
 class QDateTimeEdit;
 class QTextEdit;
+class QPushButton;
+class QLabel;
 
 class MainWindow : public QMainWindow
 {
@@ -41,6 +43,8 @@ private:
     QDateTimeEdit *ttl = nullptr;
     QCheckBox *ttlDisable = nullptr;
     QLineEdit *encryptKey = nullptr;
+    QPushButton *generateAccessKeyBtn = nullptr;
     QTextEdit *keyField = nullptr;
+    QLabel *messageLbl = nullptr;
 };
 #endif // MAINWINDOW_H

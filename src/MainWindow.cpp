@@ -80,13 +80,14 @@ MainWindow::MainWindow(QWidget *parent)
     QPushButton *generateEncryptKeyBtn = new QPushButton(tr("Generate"));
     dataLayout->addWidget(generateEncryptKeyBtn, 3, 4);
 
-    QLabel *messageLbl = new QLabel;
+    messageLbl = new QLabel;
     mainLayout->addWidget(messageLbl);
 
     mainLayout->addStretch(1);
 
     //Генерация ключа
-    QPushButton *generateAccessKeyBtn = new QPushButton(tr("Generate Access Key"));
+    generateAccessKeyBtn = new QPushButton(tr("Generate Access Key"));
+    generateAccessKeyBtn->setDisabled(true);
     mainLayout->addWidget(generateAccessKeyBtn);
 
     QHBoxLayout *keyLayout = new QHBoxLayout;
@@ -126,15 +127,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(encryptCoder.get(), &EncryptKeyGenerator::keyGenerated, [this](QString string)
     {
         encryptKey->setText(string);
+    });
 
-    });
-    connect(setEncryptKeyBtn, &QPushButton::clicked, this, &MainWindow::setEncryptKey);
-    connect(setEncryptKeyBtn, &QPushButton::clicked, [messageLbl, setEncryptKeyBtn]()
+    connect(setEncryptKeyBtn, &QPushButton::clicked, [this, setEncryptKeyBtn]()
     {
-        messageLbl->clear();
         setEncryptKeyBtn->setDisabled(true);
+        this->setEncryptKey();
     });
-    connect(encryptKey, &QLineEdit::textChanged, [messageLbl, setEncryptKeyBtn]()
+    connect(encryptKey, &QLineEdit::textChanged, [this, setEncryptKeyBtn]()
     {
         messageLbl->setText(tr("Encrypt key has changed, press 'set' to save changes"));
         setEncryptKeyBtn->setEnabled(true);
@@ -146,7 +146,6 @@ MainWindow::MainWindow(QWidget *parent)
        saveBtn->setEnabled(true);
     });
     connect(saveBtn, &QPushButton::clicked, this, &MainWindow::saveKeysToFile);
-
 
     initInterface();
 
@@ -169,12 +168,16 @@ void MainWindow::initInterface()
 
 void MainWindow::generateAccessKey()
 {
-    if (encryptKey->text().isEmpty())
+    if (encryptCoder->getKey().isEmpty())
     {
         QMessageBox::information(this, tr("Error"), tr("Enter or Generate Encrypt Key"));
         return;
     }
-
+    if (encryptKey->text().isEmpty()) // вывод последнего сохраненного ключа
+    {
+        encryptKey->setText(encryptCoder->getKey().toHex());
+        messageLbl->clear();
+    }
     accessCoder->generateAccessKey(encryptCoder->getKey());
 }
 
@@ -187,6 +190,9 @@ void MainWindow::setEncryptKey()
     }
 
     encryptCoder->saveEncryptKey(encryptKey->text());
+
+    generateAccessKeyBtn->setEnabled(true);
+    messageLbl->clear();
 }
 
 void MainWindow::saveKeysToFile()
