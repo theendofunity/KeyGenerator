@@ -71,10 +71,14 @@ MainWindow::MainWindow(QWidget *parent)
     dataLayout->addWidget(encryptKey, 3, 1, 1, 2);
 
     QPushButton *setEncryptKeyBtn = new QPushButton(tr("Set"));
+    setEncryptKeyBtn->setDisabled(true);
     dataLayout->addWidget(setEncryptKeyBtn, 3, 3);
 
     QPushButton *generateEncryptKeyBtn = new QPushButton(tr("Generate"));
     dataLayout->addWidget(generateEncryptKeyBtn, 3, 4);
+
+    QLabel *messageLbl = new QLabel;
+    mainLayout->addWidget(messageLbl);
 
     mainLayout->addStretch(1);
 
@@ -101,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
         model->setUserType(static_cast<uint8_t>(index));
     });
     connect(ttl, &QDateTimeEdit::dateTimeChanged, model.get(), &DataModel::setTtl);
+
     connect(authDisable, &QCheckBox::toggled, [this](const bool isChecked)
     {
         this->login->setDisabled(isChecked);
@@ -118,9 +123,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(encryptCoder.get(), &EncryptKeyGenerator::keyGenerated, [this](QString string)
     {
         encryptKey->setText(string);
+
     });
     connect(setEncryptKeyBtn, &QPushButton::clicked, this, &MainWindow::setEncryptKey);
-
+    connect(setEncryptKeyBtn, &QPushButton::clicked, [messageLbl, setEncryptKeyBtn]()
+    {
+        messageLbl->clear();
+        setEncryptKeyBtn->setDisabled(true);
+    });
+    connect(encryptKey, &QLineEdit::textChanged, [messageLbl, setEncryptKeyBtn]()
+    {
+        messageLbl->setText(tr("Encrypt key has changed, press 'set' to save changes"));
+        setEncryptKeyBtn->setEnabled(true);
+    });
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessKey);
     connect(accessCoder.get(), &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](QString key)
     {
