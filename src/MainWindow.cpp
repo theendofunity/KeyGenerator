@@ -15,6 +15,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <QStandardPaths>
+#include <QApplication>
+
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -188,9 +191,13 @@ void MainWindow::setEncryptKey()
 
 void MainWindow::saveKeysToFile()
 {
+    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+            + "/" + QApplication::organizationName() + "/keys.txt";
+
     QString fileName = QFileDialog::getSaveFileName(this,
-            tr("Save Keys"), QStringLiteral("keys.txt"),
+            tr("Save Keys"), path,
             tr("Text file (*.txt);;All Files (*)"));
+
     if (fileName.isEmpty())
         return;
     else
