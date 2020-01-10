@@ -1,6 +1,6 @@
 #include "AccessController.h"
 
-#include "DataModel.h"
+#include "AccessKeyDataModel.h"
 #include <QTimer>
 
 #include <QMessageBox>
@@ -9,7 +9,7 @@
 AccessController::AccessController(QString pathToKeys, QObject *parent)
     : QObject(parent)
 {
-    model = std::make_shared<DataModel>();
+    model = std::make_shared<AccessKeyDataModel>();
     decoder = new Decoder(model, this);
 
     decoder->setKeyPath(pathToKeys);

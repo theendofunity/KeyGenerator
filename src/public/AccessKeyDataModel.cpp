@@ -1,68 +1,68 @@
-#include "DataModel.h"
+#include "AccessKeyDataModel.h"
 
 #include <QDebug>
 
-DataModel::DataModel(QObject *parent)
+AccessKeyDataModel::AccessKeyDataModel(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-void DataModel::setLogin(QString login)
+void AccessKeyDataModel::setLogin(QString login)
 {
     data.login = login;
     emit dataChanged(data);
 }
 
-void DataModel::setPass(QString pass)
+void AccessKeyDataModel::setPass(QString pass)
 {
     data.pass = pass;
     emit dataChanged(data);
 }
 
-void DataModel::setLoginState(bool hasLogin)
+void AccessKeyDataModel::setLoginState(bool hasLogin)
 {
     data.noLogin = hasLogin;
     emit dataChanged(data);
 }
 
-void DataModel::setUserType(uint8_t type)
+void AccessKeyDataModel::setUserType(uint8_t type)
 {
     data.userType = type;
     emit dataChanged(data);
 }
 
-void DataModel::setTtl(QDateTime ttl)
+void AccessKeyDataModel::setTtl(QDateTime ttl)
 {
     data.ttl = ttl;
     emit dataChanged(data);
 }
 
-void DataModel::setTtlState(bool hasTtl)
+void AccessKeyDataModel::setTtlState(bool hasTtl)
 {
     data.noTtl = hasTtl;
     emit dataChanged(data);
 }
 
-void DataModel::dropToUserAccessMode()
+void AccessKeyDataModel::dropToUserAccessMode()
 {
     setUserType(User);
     setTtlState(false);
     setLoginState(false);
 }
 
-const DataModel::Data DataModel::getData() const
+const AccessKeyDataModel::Data AccessKeyDataModel::getData() const
 {
     return data;
 }
 
-void DataModel::setData(DataModel::Data newData)
+void AccessKeyDataModel::setData(AccessKeyDataModel::Data newData)
 {
     this->data = newData;
     emit dataChanged(data);
 }
 
-QStringList DataModel::dataToList()
+QStringList AccessKeyDataModel::dataToList()
 {
     QStringList dataList;
 
@@ -76,7 +76,7 @@ QStringList DataModel::dataToList()
     return  dataList;
 }
 
-DataModel::Data DataModel::listToData(QStringList list)
+AccessKeyDataModel::Data AccessKeyDataModel::listToData(QStringList list)
 {
     Data newData;
 

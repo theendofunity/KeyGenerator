@@ -6,13 +6,13 @@
 #include <memory>
 #include <QStandardPaths>
 
-class DataModel;
+class AccessKeyDataModel;
 
 class Decoder : public QObject
 {
     Q_OBJECT
 public:
-    Decoder(std::shared_ptr<DataModel> model, QObject *parent = nullptr);
+    Decoder(std::shared_ptr<AccessKeyDataModel> model, QObject *parent = nullptr);
 
     void setEncryptKey(QString key);
     void setAccessKey(QString key);
@@ -30,7 +30,7 @@ private:
 
     QString keyPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 
-    std::shared_ptr<DataModel> model = nullptr;
+    std::shared_ptr<AccessKeyDataModel> model = nullptr;
 };
 
 #endif // DECODER_H

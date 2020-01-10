@@ -9,7 +9,7 @@
 #include "QPushButton"
 #include "QTextEdit"
 
-#include "DataModel.h"
+#include "AccessKeyDataModel.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -22,7 +22,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , model(std::make_shared<DataModel>(this))
+    , model(std::make_shared<AccessKeyDataModel>(this))
     , encryptCoder(std::make_unique<EncryptKeyGenerator>(this))
     , accessCoder(std::make_unique<AccessKeyGenerator>(model, this))
 {
@@ -102,13 +102,13 @@ MainWindow::MainWindow(QWidget *parent)
     saveBtn->setDisabled(true);
 
     //Подключение к кодерам и модели данных
-    connect(login, &QLineEdit::textChanged, model.get(), &DataModel::setLogin);
-    connect(password, &QLineEdit::textChanged, model.get(), &DataModel::setPass);
+    connect(login, &QLineEdit::textChanged, model.get(), &AccessKeyDataModel::setLogin);
+    connect(password, &QLineEdit::textChanged, model.get(), &AccessKeyDataModel::setPass);
     connect(userType, QOverload<int>::of(&QComboBox::activated), [=](int index)
     {
         model->setUserType(static_cast<uint8_t>(index));
     });
-    connect(ttl, &QDateTimeEdit::dateTimeChanged, model.get(), &DataModel::setTtl);
+    connect(ttl, &QDateTimeEdit::dateTimeChanged, model.get(), &AccessKeyDataModel::setTtl);
 
     connect(authDisable, &QCheckBox::toggled, [this](const bool isChecked)
     {

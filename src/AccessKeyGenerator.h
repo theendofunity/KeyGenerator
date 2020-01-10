@@ -5,14 +5,14 @@
 #include <memory>
 
 class QString;
-class DataModel;
+class AccessKeyDataModel;
 
 class AccessKeyGenerator : public QObject
 {
     Q_OBJECT
 
 public:
-    AccessKeyGenerator(std::shared_ptr<DataModel> model, QObject *parent = nullptr);
+    AccessKeyGenerator(std::shared_ptr<AccessKeyDataModel> model, QObject *parent = nullptr);
     void generateAccessKey(QByteArray encryptKey);
 
 private:
@@ -22,7 +22,7 @@ signals:
     void accessKeyGenerated(QString key);
 
 private:
-    std::shared_ptr<DataModel> model;
+    std::shared_ptr<AccessKeyDataModel> model;
     QByteArray key;
 };
 

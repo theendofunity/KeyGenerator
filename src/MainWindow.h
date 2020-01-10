@@ -7,7 +7,7 @@
 #include "EncryptKeyGenerator.h"
 #include "AccessKeyGenerator.h"
 
-class DataModel;
+class AccessKeyDataModel;
 
 class QLineEdit;
 class QCheckBox;
@@ -32,7 +32,7 @@ private:
     void saveKeysToFile();
 
 private:
-    std::shared_ptr<DataModel> model = nullptr;
+    std::shared_ptr<AccessKeyDataModel> model = nullptr;
     std::unique_ptr<EncryptKeyGenerator> encryptCoder = nullptr;
     std::unique_ptr<AccessKeyGenerator> accessCoder = nullptr;
 

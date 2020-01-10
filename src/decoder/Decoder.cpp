@@ -3,13 +3,13 @@
 
 #include "AES/qaesencryption.h"
 
-#include <DataModel.h>
+#include <AccessKeyDataModel.h>
 
 #include <QFile>
 #include <QDebug>
 
 
-Decoder::Decoder(std::shared_ptr<DataModel> model, QObject *parent)
+Decoder::Decoder(std::shared_ptr<AccessKeyDataModel> model, QObject *parent)
     : QObject(parent)
     , model(model)
 {
