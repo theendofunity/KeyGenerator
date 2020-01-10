@@ -22,9 +22,9 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , model(std::make_shared<AccessKeyDataModel>(this))
-    , encryptCoder(std::make_unique<EncryptKeyGenerator>(this))
-    , accessCoder(std::make_unique<AccessKeyGenerator>(model, this))
+    , model(std::make_shared<AccessKeyDataModel>())
+    , encryptCoder(std::make_unique<EncryptKeyGenerator>())
+    , accessCoder(std::make_unique<AccessKeyGenerator>(model))
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
