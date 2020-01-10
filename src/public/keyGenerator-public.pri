@@ -7,11 +7,11 @@ INCLUDEPATH += $${LIBS_PATH}
 
 
 HEADERS += \
+    $$PWD/AccessKeyDataModel.h \
     $${LIBS_PATH}/AES/qaesencryption.h \
-    $$PWD/DataModel.h \
 
 SOURCES += \
+    $$PWD/AccessKeyDataModel.cpp \
     $${LIBS_PATH}/AES/qaesencryption.cpp \
-    $$PWD/DataModel.cpp \
 
 

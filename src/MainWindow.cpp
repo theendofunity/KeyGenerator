@@ -9,19 +9,22 @@
 #include "QPushButton"
 #include "QTextEdit"
 
-#include "DataModel.h"
+#include "AccessKeyDataModel.h"
 
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <QStandardPaths>
+#include <QApplication>
+
 #include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , model(std::make_shared<DataModel>(this))
-    , encryptCoder(std::make_unique<EncryptKeyGenerator>(this))
-    , accessCoder(std::make_unique<AccessKeyGenerator>(model, this))
+    , model(std::make_shared<AccessKeyDataModel>())
+    , encryptCoder(std::make_unique<EncryptKeyGenerator>())
+    , accessCoder(std::make_unique<AccessKeyGenerator>(model))
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -71,15 +74,20 @@ MainWindow::MainWindow(QWidget *parent)
     dataLayout->addWidget(encryptKey, 3, 1, 1, 2);
 
     QPushButton *setEncryptKeyBtn = new QPushButton(tr("Set"));
+    setEncryptKeyBtn->setDisabled(true);
     dataLayout->addWidget(setEncryptKeyBtn, 3, 3);
 
     QPushButton *generateEncryptKeyBtn = new QPushButton(tr("Generate"));
     dataLayout->addWidget(generateEncryptKeyBtn, 3, 4);
 
+    messageLbl = new QLabel;
+    mainLayout->addWidget(messageLbl);
+
     mainLayout->addStretch(1);
 
     //Генерация ключа
-    QPushButton *generateAccessKeyBtn = new QPushButton(tr("Generate Access Key"));
+    generateAccessKeyBtn = new QPushButton(tr("Generate Access Key"));
+    generateAccessKeyBtn->setDisabled(true);
     mainLayout->addWidget(generateAccessKeyBtn);
 
     QHBoxLayout *keyLayout = new QHBoxLayout;
@@ -94,13 +102,14 @@ MainWindow::MainWindow(QWidget *parent)
     saveBtn->setDisabled(true);
 
     //Подключение к кодерам и модели данных
-    connect(login, &QLineEdit::textChanged, model.get(), &DataModel::setLogin);
-    connect(password, &QLineEdit::textChanged, model.get(), &DataModel::setPass);
+    connect(login, &QLineEdit::textChanged, model.get(), &AccessKeyDataModel::setLogin);
+    connect(password, &QLineEdit::textChanged, model.get(), &AccessKeyDataModel::setPass);
     connect(userType, QOverload<int>::of(&QComboBox::activated), [=](int index)
     {
         model->setUserType(static_cast<uint8_t>(index));
     });
-    connect(ttl, &QDateTimeEdit::dateTimeChanged, model.get(), &DataModel::setTtl);
+    connect(ttl, &QDateTimeEdit::dateTimeChanged, model.get(), &AccessKeyDataModel::setTtl);
+
     connect(authDisable, &QCheckBox::toggled, [this](const bool isChecked)
     {
         this->login->setDisabled(isChecked);
@@ -119,8 +128,17 @@ MainWindow::MainWindow(QWidget *parent)
     {
         encryptKey->setText(string);
     });
-    connect(setEncryptKeyBtn, &QPushButton::clicked, this, &MainWindow::setEncryptKey);
 
+    connect(setEncryptKeyBtn, &QPushButton::clicked, [this, setEncryptKeyBtn]()
+    {
+        setEncryptKeyBtn->setDisabled(true);
+        this->setEncryptKey();
+    });
+    connect(encryptKey, &QLineEdit::textChanged, [this, setEncryptKeyBtn]()
+    {
+        messageLbl->setText(tr("Encrypt key has changed, press 'set' to save changes"));
+        setEncryptKeyBtn->setEnabled(true);
+    });
     connect(generateAccessKeyBtn, &QPushButton::clicked, this, &MainWindow::generateAccessKey);
     connect(accessCoder.get(), &AccessKeyGenerator::accessKeyGenerated, [this, saveBtn](QString key)
     {
@@ -128,7 +146,6 @@ MainWindow::MainWindow(QWidget *parent)
        saveBtn->setEnabled(true);
     });
     connect(saveBtn, &QPushButton::clicked, this, &MainWindow::saveKeysToFile);
-
 
     initInterface();
 
@@ -151,12 +168,16 @@ void MainWindow::initInterface()
 
 void MainWindow::generateAccessKey()
 {
-    if (encryptKey->text().isEmpty())
+    if (encryptCoder->getKey().isEmpty())
     {
         QMessageBox::information(this, tr("Error"), tr("Enter or Generate Encrypt Key"));
         return;
     }
-
+    if (encryptKey->text().isEmpty()) // вывод последнего сохраненного ключа
+    {
+        encryptKey->setText(encryptCoder->getKey().toHex());
+        messageLbl->clear();
+    }
     accessCoder->generateAccessKey(encryptCoder->getKey());
 }
 
@@ -169,13 +190,20 @@ void MainWindow::setEncryptKey()
     }
 
     encryptCoder->saveEncryptKey(encryptKey->text());
+
+    generateAccessKeyBtn->setEnabled(true);
+    messageLbl->clear();
 }
 
 void MainWindow::saveKeysToFile()
 {
+    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+            + "/" + QApplication::organizationName() + "/keys.txt";
+
     QString fileName = QFileDialog::getSaveFileName(this,
-            tr("Save Keys"), QStringLiteral("keys.txt"),
+            tr("Save Keys"), path,
             tr("Text file (*.txt);;All Files (*)"));
+
     if (fileName.isEmpty())
         return;
     else

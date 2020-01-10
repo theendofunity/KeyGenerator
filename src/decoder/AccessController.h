@@ -6,7 +6,7 @@
 
 #include "Decoder.h"
 
-class DataModel;
+class AccessKeyDataModel;
 class QTimer;
 
 class AccessController : public QObject
@@ -25,8 +25,8 @@ signals:
     void ttlEnded();
 
 private:
-    std::shared_ptr<DataModel> model = nullptr;
-    std::unique_ptr<Decoder> decoder = nullptr;
+    std::shared_ptr<AccessKeyDataModel> model = nullptr;
+    Decoder* decoder = nullptr;
 
     QTimer *timer = nullptr;
 };

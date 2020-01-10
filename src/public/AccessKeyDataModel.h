@@ -5,7 +5,7 @@
 #include "stdint.h"
 #include "QDateTime"
 
-class DataModel : public QObject
+class AccessKeyDataModel : public QObject
 {
     Q_OBJECT
 
@@ -28,7 +28,7 @@ public:
         bool noTtl = true;
     };
 public:
-    DataModel(QObject *parent = nullptr);
+    AccessKeyDataModel(QObject *parent = nullptr);
 
     void setLogin(QString login);
     void setPass(QString pass);
@@ -36,6 +36,8 @@ public:
     void setUserType(uint8_t type);
     void setTtl(QDateTime ttl);
     void setTtlState(bool hasTtl);
+
+    void dropToUserAccessMode();
 
     const Data getData() const;
     void setData(Data newData);

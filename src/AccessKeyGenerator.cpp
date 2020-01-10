@@ -4,11 +4,11 @@
 #include <QString>
 #include <QStringList>
 
-#include <DataModel.h>
+#include <AccessKeyDataModel.h>
 
 #include <QDebug>
 
-AccessKeyGenerator::AccessKeyGenerator(std::shared_ptr<DataModel> model, QObject *parent)
+AccessKeyGenerator::AccessKeyGenerator(std::shared_ptr<AccessKeyDataModel> model, QObject *parent)
         : QObject(parent)
         , model(model)
 {
