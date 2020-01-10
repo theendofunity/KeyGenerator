@@ -77,10 +77,10 @@ void Decoder::readKeys()
 
     if (keys.size() == 2) //2 ключа
     {
-        QString key1 = keys[0].split(": ")[1];
+        QString key1 = keys.at(0).split(": ")[1];
         setEncryptKey(key1);
 
-        QString key2 = keys[1].split(": ")[1];
+        QString key2 = keys.at(1).split(": ")[1];
         setAccessKey(key2);
     }
 }
@@ -88,7 +88,9 @@ void Decoder::readKeys()
 void Decoder::parseKeys(QString key)
 {
     QStringList list = key.split("|");
-    if (list.size() != 5) //5 параметров в модели
+    list.removeLast(); //удаление пустого элемента
+
+    if (list.size() != 6) //6 параметров в модели
     {
         qDebug() << "Error! Incorrect Key";
         model->dropToUserAccessMode();
